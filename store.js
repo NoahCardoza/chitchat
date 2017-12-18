@@ -1,6 +1,7 @@
 import { devToolsEnhancer } from 'redux-devtools-extension';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import nextConnectRedux from 'next-redux-wrapper';
 import Sagas from './sagas.js';
 
 const messages = (state = [], action) => {
@@ -28,13 +29,18 @@ const reducer = combineReducers({
   username
 });
 
-export default function() {
+const initStore = initState => {
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
     reducer,
     devToolsEnhancer(),
-    applyMiddleware(sagaMiddleware)
+    applyMiddleware(sagaMiddleware),
+    initState
   );
   sagaMiddleware.run(Sagas);
   return (store);
 }
+
+const nextConnect = nextConnectRedux(initStore);
+
+export default nextConnect;
