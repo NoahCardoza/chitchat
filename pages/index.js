@@ -29,7 +29,7 @@ let Input = ({ dispatch, placeholder, onSubmit }) => {
 
 const mapDispatchToMsgInputProps = dispatch => {
   return {
-    placeholder: 'Fick!',
+    placeholder: 'Type your heart out!',
     onSubmit: input => {
       dispatch({
         type: 'WS_SEND',
@@ -42,6 +42,23 @@ const mapDispatchToMsgInputProps = dispatch => {
     }
   };
 }
+
+const mapDispatchToUsernameInputProps = dispatch => {
+  return {
+    placeholder: 'What would you like to be feared by?',
+    onSubmit: input => {
+      dispatch({
+        type: 'WS_SEND',
+        msg: {
+          type: 'SET_USERNAME',
+          msg: input.value
+        }
+      });
+      input.value = '';
+    }
+  };
+}
+
 
 const MsgInput = connect(null, mapDispatchToMsgInputProps)(Input);
 
