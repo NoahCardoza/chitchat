@@ -5,6 +5,6 @@ A little chat program built with sockets. A project to learn React, Redux, Socke
 git clone https://github.com/NoahCardoza/chitchat.git
 cd chitchat
 npm install
-npm ws-server.js &
+node ws-server.js &
 npm run dev
 ```
