@@ -20,8 +20,8 @@ function* watchWebSockets() {
       console.log('Message:', incoming);
       yield put(JSON.parse(incoming.data));
     } else {
-      console.log('Send:', outgoing.msg);
-      socket.send(JSON.stringify(outgoing.msg));
+      console.log('Send:', outgoing.data);
+      socket.send(JSON.stringify(outgoing.data));
     }
   }
 }

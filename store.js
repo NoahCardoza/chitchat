@@ -9,13 +9,14 @@ const messages = (state = [], action) => {
     case 'SET_HISTORY':
       return action.messages;
     case 'NEW_MESSAGE':
-      return [...state, action.msg];
+      return [...state, {...action, type: undefined}];
     default:
       return state;
   }
 }
 
 const username = (state = false, action) => {
+  console.log(action);
   switch (action.type) {
     case 'SET_USERNAME':
       return action.username;

@@ -5,7 +5,10 @@ import nextConnect from '../store.js';
 
 let Messages = ({ messages }) =>
   $('div', { className: 'messages' },
-    messages.map((msg, key) => $('div', { key }, msg)));
+    messages.map((entry, key) =>
+    $('div', { key },
+      $('b', null, entry.username + ': '),
+      entry.message)));
 
 const mapStateMessagesProps = ({ messages }) => {
   return { messages };
@@ -17,6 +20,7 @@ let Input = ({ dispatch, placeholder, onSubmit }) => {
   let input;
   return (
     $('form', {
+      autoFocus: true,
       action:'javascript:',
       onSubmit: () => onSubmit(input)
     },
@@ -33,9 +37,9 @@ const mapDispatchToMsgInputProps = dispatch => {
     onSubmit: input => {
       dispatch({
         type: 'WS_SEND',
-        msg: {
+        data: {
           type: 'NEW_MESSAGE',
-          msg: input.value
+          message: input.value
         }
       });
       input.value = '';
@@ -49,9 +53,9 @@ const mapDispatchToUsernameInputProps = dispatch => {
     onSubmit: input => {
       dispatch({
         type: 'WS_SEND',
-        msg: {
+        data: {
           type: 'SET_USERNAME',
-          msg: input.value
+          username: input.value
         }
       });
       input.value = '';
@@ -61,19 +65,27 @@ const mapDispatchToUsernameInputProps = dispatch => {
 
 
 const MsgInput = connect(null, mapDispatchToMsgInputProps)(Input);
+const UsernameInput = connect(null, mapDispatchToUsernameInputProps)(Input);
 
 Input = connect()(Input);
 
-const Messenger = [$(Messages), $(Input, {
-  placeholder: 'Type your heart out!'
-})]
+const Room = () => [$(Messages), $(MsgInput)];
+const Welcome = () => [$('div', null, 'Welcome! Choose a username!'), $(UsernameInput)];
 
-const App = () =>
+const App = ({ username }) => {
+  console.log(username);
+  return (
   $('div', { className: 'chitchat' },
     $(Head, null,
       $('title', null, 'Chat-Chat'),
       $('meta', {name: 'viewport', content:'initial-scale=1.0, width=device-width'})),
-    $(Messages),
-    $(MsgInput));
+    (username
+      ? Room()
+      : Welcome()))
+    )}
 
-export default nextConnect(App);
+const mapStateToAppProps = ({ username }) => {
+  return { username }
+};
+
+export default nextConnect(connect(mapStateToAppProps)(App));
